@@ -1,24 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import HomeScreen from './screens/HomeScreen';
+
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and sdfsd to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Hello world sfdssdf
-        </a>
-      </header>
+      <Header />
+      <div className="main mt-5">
+        <HomeScreen />
+      </div>
+      <Footer />
     </div>
   );
 }
