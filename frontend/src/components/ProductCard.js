@@ -1,21 +1,31 @@
-import React, { Component } from 'react';
+import React from 'react';
 import products from '../products';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
+import Rating from './Rating';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useParams,
+} from 'react-router-dom';
 
 function ProductCard({ product }) {
   return (
-    <Card>
-      <a href={`/products/${product._id}`}>
+    <Card className="mt-3">
+      <Link to={`/products/${product._id}`}>
         <Card.Img variant="top" src={product.image} />
-      </a>
+      </Link>
 
       {/* <Card.Img variant="top" src={require('../images/airpods.jpg')} /> */}
 
       <Card.Body>
-        <Card.Title>{product.name}</Card.Title>
-        <Card.Text>{product.description}</Card.Text>
-        {/* <Button variant="primary">Go somewhere</Button> */}
-        <Card.Text>{`${product.rating} of ${product.numReviews} reviews `}</Card.Text>
+        <Link to={`/products/${product._id}`}>
+          <Card.Title>{product.name}</Card.Title>
+        </Link>
+        {/* <Card.Text>{`${product.rating} of ${product.numReviews} reviews `}</Card.Text> */}
+        <Rating value={product.rating} text={product.numReviews} />
         <Card.Title className="mb-2 text-muted">{product.price}</Card.Title>
       </Card.Body>
     </Card>
