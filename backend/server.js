@@ -1,12 +1,15 @@
 const express = require('express');
 require('dotenv').config();
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const routes = require('./routes/api');
+const passport = require('passport');
+// const routes = require('./routes/api');
+const users = require('./routes/api/users');
+const products = require('./routes/api/products');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 require('dotenv').config();
 const connectDB = require('./database/db');
-const colors = require('colors');
+
 // import connectDB from './database/db.js';
 // connectDB() = require('./database/db.js');
 
@@ -33,13 +36,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res, next) => {
-//   res.send('Welcome to Express');
-// });
-
 app.use(bodyParser.json());
 
-app.use('/api', routes);
+// app.use('/api', routes);
+
+// Passport middleware
+app.use(passport.initialize());
+// Passport config
+require('./config/passport')(passport);
+// Routes
+app.use('/api/users', users);
+app.use('/api/products', products);
+
+var cors = require('cors');
+app.use(cors());
 
 app.use((err, req, res, next) => {
   console.log(err);

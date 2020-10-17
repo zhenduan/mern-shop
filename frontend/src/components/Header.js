@@ -19,6 +19,9 @@ export default class Header extends Component {
               <LinkContainer to="/login">
                 <Nav.Link>Login</Nav.Link>
               </LinkContainer>
+              <LinkContainer to="/register">
+                <Nav.Link>Register</Nav.Link>
+              </LinkContainer>
             </Nav>
           </Navbar.Collapse>
         </Container>

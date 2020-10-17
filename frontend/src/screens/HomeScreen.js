@@ -1,30 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-//import products from '../products';
-import { Container, Row, Col } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { listProducts } from '../actions/productActions';
+import Message from '../components/Message';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import ProductCard from '../components/ProductCard';
 
 function HomeScreen() {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+
+  const productList = useSelector((state) => state.productList);
+  const { loading, error, products } = productList;
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await axios.get('http://localhost:5000/api/products');
-      setProducts(response.data);
-    };
-
-    fetchProducts();
-  }, []);
+    dispatch(listProducts());
+  }, [dispatch]);
 
   return (
     <Container>
-      <Row>
-        {products.map((product) => (
-          <Col key={product._id} xs={12} sm={6} lg={4}>
-            <ProductCard product={product} />
-          </Col>
-        ))}
-      </Row>
+      {loading ? (
+        <span className="center-element">
+          <Spinner animation="grow" />
+        </span>
+      ) : error ? (
+        <Message message={error} variant="danger" />
+      ) : (
+        <Row>
+          {products.map((product) => (
+            <Col key={product._id} xs={12} sm={6} lg={4}>
+              <ProductCard product={product} />
+            </Col>
+          ))}
+        </Row>
+      )}
     </Container>
   );
 }

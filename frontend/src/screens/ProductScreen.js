@@ -1,38 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from 'react-router-dom';
-import { Container, Row, Col, Button, ListGroup } from 'react-bootstrap';
+import { Link, useParams, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { listProductDetail } from '../actions/productActions';
+import { Container, Row, Col, Button, ListGroup, Form } from 'react-bootstrap';
 import Image from 'react-bootstrap/Image';
-//import products from '../products';
 import Rating from '../components/Rating';
-import axios from 'axios';
 
 const ProductScreen = () => {
-  const [product, setProduct] = useState('');
+  let history = useHistory();
+  // redux version
+  const dispatch = useDispatch();
   let { id } = useParams();
+  const productDetail = useSelector((state) => state.productDetail);
+  const { loading, error, product } = productDetail;
+  const [qty, setQty] = useState(1);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      const response = await axios.get(
-        `http://localhost:5000/api/products/${id}`
-      );
-      setProduct(response.data);
-    };
+    dispatch(listProductDetail(id));
+  }, [dispatch]);
 
-    fetchProduct();
-  }, []);
+  const addToCartHandler = () => {
+    history.push(`/cart/${id}?qty=${qty}`);
+  };
 
-  // console.log(id);
-  // let product = products.find((p) => p._id === id);
   return (
     <Container>
       <Row>
-        <Button className="btn btn-primary">Go Back</Button>
+        <Link className="btn btn-primary" to="/">
+          Go Back
+        </Link>
       </Row>
       <Row>
         <Col md={6}>
@@ -55,6 +51,23 @@ const ProductScreen = () => {
             <ListGroup.Item>
               {product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}
             </ListGroup.Item>
+            {product.countInStock > 0 && (
+              <ListGroup.Item>
+                Qty:
+                <Form.Control
+                  as="select"
+                  value={qty}
+                  onChange={(e) => setQty(e.target.value)}
+                >
+                  {[...Array(product.countInStock).keys()].map((x) => (
+                    <option key={x + 1} value={x + 1}>
+                      {x + 1}
+                    </option>
+                  ))}
+                </Form.Control>
+              </ListGroup.Item>
+            )}
+
             <ListGroup.Item>
               <Button
                 className={
@@ -62,6 +75,7 @@ const ProductScreen = () => {
                     ? 'btn btn-primary'
                     : 'btn btn-primary disabled'
                 }
+                onClick={addToCartHandler}
               >
                 Add to Cart
               </Button>
